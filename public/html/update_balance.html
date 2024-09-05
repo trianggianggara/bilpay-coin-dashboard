@@ -63,6 +63,7 @@
         function validateForm(event) {
             const regisBalance = document.getElementById('balance_regis');
             const topupBalance = document.getElementById('balance_topup');
+            const minTopupBalance = document.getElementById('balance_min_topup');
             const paymentBalance = document.getElementById('balance_payment');
             let isValid = true;
 
@@ -78,6 +79,13 @@
                 isValid = false;
             } else {
                 clearError('balance_topup_error');
+            }
+
+            if (!minTopupBalance.value) {
+                displayError('balance_min_topup_error', 'Min Top Up Balance is required');
+                isValid = false;
+            } else {
+                clearError('balance_min_topup_error');
             }
 
             if (!paymentBalance.value) {
@@ -164,6 +172,12 @@
                 <label for="balance_topup" class="block text-sm font-medium text-gray-700 required">Top Up Balance:</label>
                 <input type="number" id="balance_topup" name="balance_topup" placeholder="Enter Top Up Balance" class="underline-input mt-1 block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
                 <div id="balance_topup_error" class="error"></div>
+            </div>
+
+            <div class="mb-4">
+                <label for="balance_min_topup" class="block text-sm font-medium text-gray-700 required">Min Top Up Balance:</label>
+                <input type="number" id="balance_min_topup" name="balance_min_topup" placeholder="Enter Minimum Top Up Balance" class="underline-input mt-1 block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                <div id="balance_min_topup_error" class="error"></div>
             </div>
 
             <div class="mb-4">

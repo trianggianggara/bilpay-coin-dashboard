@@ -53,12 +53,13 @@ app.get('/update', checkAuth, (req, res) => {
 });
 
 app.post('/update', checkAuth, (req, res) => {
-  const { balance_regis, balance_topup, balance_payment } = req.body;
+  const { balance_regis, balance_topup, balance_min_topup, balance_payment } = req.body;
   const updateBalanceQuery = 'UPDATE balance_config SET balance = $1 WHERE balance_type = $2';
 
   const tasks = [
     pool.query(updateBalanceQuery, [balance_regis, 'regis']),
     pool.query(updateBalanceQuery, [balance_topup, 'topup']),
+    pool.query(updateBalanceQuery, [balance_min_topup, 'min_topup']),
     pool.query(updateBalanceQuery, [balance_payment, 'payment']),
   ];
 
