@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilpay | Update Coin Balance</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Comfortaa', cursive;
+        }
+        .error {
+            color: red;
+            font-size: 0.875rem;
+        }
+        .underline-input {
+            border: none;
+            border-bottom: 1px solid #000;
+            outline: none;
+        }
+        .underline-input:focus {
+            border-color: #1140fb;
+        }
+        .underline-input.error-input {
+            border-bottom-color: red;
+        }
+        .required::after {
+            content: " *";
+            color: red;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .success {
+            color: green;
+            font-size: 1rem;
+        }
+        .notification-show {
+            animation: fadeIn 0.5s ease-out;
+        }
+        .notification-hide {
+            animation: fadeOut 1s ease-in;
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <script>
+        function validateForm(event) {
+            const regisBalance = document.getElementById('balance_regis');
+            const topupBalance = document.getElementById('balance_topup');
+            const paymentBalance = document.getElementById('balance_payment');
+            let isValid = true;
+
+            if (!regisBalance.value) {
+                displayError('balance_regis_error', 'Regis Balance is required');
+                isValid = false;
+            } else {
+                clearError('balance_regis_error');
+            }
+
+            if (!topupBalance.value) {
+                displayError('balance_topup_error', 'Top Up Balance is required');
+                isValid = false;
+            } else {
+                clearError('balance_topup_error');
+            }
+
+            if (!paymentBalance.value) {
+                displayError('balance_payment_error', 'Payment Balance is required');
+                isValid = false;
+            } else {
+                clearError('balance_payment_error');
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            } else {
+                document.getElementById('confirmation-dialog').classList.remove('hidden');
+                event.preventDefault();
+            }
+        }
+
+        function confirmUpdate() {
+            document.getElementById('update-form').submit();
+            document.getElementById('confirmation-dialog').classList.add('hidden');
+        }
+
+        function cancelUpdate() {
+            document.getElementById('confirmation-dialog').classList.add('hidden');
+        }
+
+        function displayError(elementId, message) {
+            document.getElementById(elementId).textContent = message;
+        }
+
+        function clearError(elementId) {
+            document.getElementById(elementId).textContent = '';
+        }
+
+        function showSuccessNotification() {
+            const successNotification = document.getElementById('success-notification');
+            successNotification.classList.remove('hidden', 'notification-hide');
+            successNotification.classList.add('notification-show');
+            setTimeout(() => {
+                successNotification.classList.remove('notification-show');
+                successNotification.classList.add('notification-hide');
+                setTimeout(() => {
+                    successNotification.classList.add('hidden');
+                }, 1000);
+            }, 3000); 
+        }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('success') === 'true') {
+                showSuccessNotification();
+            }
+        }
+    </script>
+    <link rel="icon" href="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=260,fit=crop,q=95/m5Krrqg5G8tVyZay/logo-tuas-YrDXlXKl0LiGB6V5.png" type="image/png">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen relative">
+
+    <div class="absolute top-4 right-4">
+        <a href="/logout" class="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            Logout
+        </a>
+    </div>
+
+    <div class="bg-white p-8 rounded-lg w-full max-w-md">
+
+        <div class="mb-4 flex justify-center">
+            <img src="https://bilpay.id/images/logo_red.png" alt="Bilpay Logo" class="h-24">
+        </div>
+        
+        <div class="mb-6 text-center text-xl font-semibold">
+            Update Balance
+        </div>
+
+        <form id="update-form" onsubmit="validateForm(event)" method="POST">
+
+            <div class="mb-4">
+                <label for="balance_regis" class="block text-sm font-medium text-gray-700 required">Regis Balance:</label>
+                <input type="number" id="balance_regis" name="balance_regis" placeholder="Enter Regis Balance" class="underline-input mt-1 block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                <div id="balance_regis_error" class="error"></div>
+            </div>
+
+            <div class="mb-4">
+                <label for="balance_topup" class="block text-sm font-medium text-gray-700 required">Top Up Balance:</label>
+                <input type="number" id="balance_topup" name="balance_topup" placeholder="Enter Top Up Balance" class="underline-input mt-1 block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                <div id="balance_topup_error" class="error"></div>
+            </div>
+
+            <div class="mb-4">
+                <label for="balance_payment" class="block text-sm font-medium text-gray-700 required">Payment Balance:</label>
+                <input type="number" id="balance_payment" name="balance_payment" placeholder="Enter Payment Balance" class="underline-input mt-1 block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                <div id="balance_payment_error" class="error"></div>
+            </div>
+
+            <button type="submit" class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                Update
+            </button>
+        </form>
+
+        <div id="confirmation-dialog" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden fade-in">
+            <div class="bg-white p-6 rounded-lg w-full max-w-sm">
+                <div class="text-lg font-semibold mb-4">Confirm Update</div>
+                <p class="mb-4 text-base">Are you sure you want to update the balances? This action cannot be undone.</p>
+                <div class="flex justify-between">
+                    <button onclick="confirmUpdate()" class="text-base bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        Confirm
+                    </button>
+                    <button onclick="cancelUpdate()" class="text-base bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="success-notification" class="fixed bottom-4 right-4 bg-green-600 text-white py-2 px-4 rounded-md hidden">
+            Successfully updated balances!
+        </div>
+    </div>
+</body>
+</html>
